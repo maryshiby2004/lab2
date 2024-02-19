@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Lab 2 | COMP1073 Client-Side JavaScript</title>
+    <!-- <link href="styles.css" rel="stylesheet" /> -->
+    <style>
+        html {
+            font-family: sans-serif;
+            font-size: 200%;
+            background-color: rgb(0, 0, 0);
+            color: rgb(255, 255, 255);
+            transition-property: background-color;
+            transition-duration: 0.25s;
+        }
+    </style>
+</head>
+
+<body>
+<h1>Lab 2</h1>
+<p>
+    This script will enable the user to adjust the below range input
+    elements to modify the
+    <abbr title="Red, Green, Blue">RGB</abbr> values of the
+    <code>background-color</code> CSS property of the HTML element.
+</p>
+<label for="red">Red</label>
+<input id="red" type="range" min="0" max="255" value="0" />
+<label for="green">Green</label>
+<input id="green" type="range" min="0" max="255" value="0" />
+<label for="blue">Blue</label>
+<input id="blue" type="range" min="0" max="255" value="0" />
+
+<script>
+    /* Declare and initialize global variables */
+    var pageBg = document.querySelector("html");
+    var sliders = document.getElementsByTagName("input");
+    var rgb = [0, 0, 0];
+
+    /* Event handlers for range sliders */
+    for (var i = 0; i < sliders.length; i++) {
+        sliders[i].oninput = function () {
+            var whichSlider = this.getAttribute("id");
+            var sliderValue = this.value;
+            var newRgb = changeRgb(whichSlider, sliderValue);
+            var newCSS = writeCSS(newRgb);
+            pageBg.style.backgroundColor = newCSS;
+        };
+    }
+
+    /* Functions */
+    // STEP 1: Write a function called changeRgb that accepts two parameters, channel and value
+    function changeRgb(channel, value) {
+        // STEP 2: Build a switch based on the value of the channel parameter
+        switch (channel) {
+            // STEP 3: Inside each case, update the appropriate global rgb array element
+            case "red":
+                rgb[0] = value;
+                break;
+            case "green":
+                rgb[1] = value;
+                break;
+            case "blue":
+                rgb[2] = value;
+                break;
+        }
+        // STEP 4: Return a new array with the updated rgb values
+        return [...rgb];
+    }
+
+    // STEP 5: Write a new function called writeCSS that accepts one parameter, the updated rgb array
+    function writeCSS(newRgb) {
+        /* STEP 6: Declare a new local variable called newColor that will contain the new string
+                    that will be used to update the CSS background-color property
+                    in the following format: rgb(0,0,0) - initialize it with the start of the string, 'rgb(' */
+        var newColor = 'rgb(';
+
+        // STEP 7: Create a loop that iterates through the array passed into this function
+        for (var i = 0; i < newRgb.length; i++) {
+            // STEP 8: For each element of the array, add to the string newColor, the red, green, and blue values, each followed by a comma
+            newColor += Math.min(255, Math.max(0, newRgb[i])); // Ensure values are within the valid RGB range (0 to 255)
+            if (i < newRgb.length - 1) {
+                newColor += ',';
+            }
+        }
+
+        // STEP 9: Finish off the newColor string by adding the closing ')'
+        newColor += ')';
+
+        // STEP 10: Return the string newColor back to the event handler
+        return newColor;
+    }
+    // STEP 11: Enjoy the application in your browser!
+</script>
+</body>
+
+</html>
